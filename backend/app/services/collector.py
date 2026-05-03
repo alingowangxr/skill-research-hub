@@ -5,7 +5,7 @@ import random
 from datetime import datetime, timedelta, timezone
 from .fetcher import fetch_search, fetch_by_tag, fetch_by_author
 from .github_fetcher import search_github_mcp, discover_by_file
-from ..cache import save_skill, load_cache, set_meta, get_meta
+from ..cache import save_skill, save_skills_batch, save_snapshots_batch, load_cache, set_meta, get_meta
 
 # Expanded Seed Keywords for Horizontal Discovery
 INITIAL_KEYWORDS = [
@@ -28,14 +28,21 @@ def simulate_metadata(skill):
     s_id = str(skill.get("id", "default"))
     seed = int(hashlib.md5(s_id.encode()).hexdigest(), 16)
     
+    inferred = False
     if not skill.get("author"):
         authors = ["Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace"]
         skill["author"] = authors[seed % len(authors)]
+        inferred = True
     
     if not skill.get("updated_at"):
         days_ago = seed % 300
         dt = datetime.now(timezone.utc) - timedelta(days=days_ago)
         skill["updated_at"] = dt.isoformat()
+        inferred = True
+    
+    if inferred:
+        skill["is_inferred"] = True
+        skill["metadata_quality"] = skill.get("metadata_quality", 60) # Lower quality for inferred
     
     return skill
 
@@ -85,11 +92,20 @@ def collect_dataset(force=False):
             raw_data = fetch_search(kw, page)
             skills = extract_skills(raw_data)
             if not skills: break
+            
+            batch = []
             for s in skills:
                 if isinstance(s, dict) and "id" in s:
+                    s["source"] = "marketplace"
+                    s["source_url"] = f"https://smithery.ai/search?q={kw}"
                     s = simulate_metadata(s)
-                    save_skill(s)
-                    count += 1
+                    batch.append(s)
+            
+            if batch:
+                save_skills_batch(batch)
+                save_snapshots_batch(batch)
+                count += len(batch)
+            
             page += 1
             if page > 50: break
             time.sleep(0.5 + random.random())
@@ -99,16 +115,34 @@ def collect_dataset(force=False):
     for q in gh_queries:
         logger.info(f"GitHub Discovery: {q}")
         gh_results = search_github_mcp(q)
+        
+        batch = []
         for s in gh_results:
-            save_skill(s)
-            count += 1
+            s["source"] = "github_search"
+            if "source_url" not in s and "html_url" in s:
+                s["source_url"] = s["html_url"]
+            batch.append(s)
+        
+        if batch:
+            save_skills_batch(batch)
+            save_snapshots_batch(batch)
+            count += len(batch)
+            
         time.sleep(2)
 
     # 4. Feature File Discovery
     gh_files = discover_by_file("SKILL.md")
+    batch = []
     for s in gh_files:
-        save_skill(s)
-        count += 1
+        s["source"] = "github_files"
+        if "source_url" not in s and "html_url" in s:
+            s["source_url"] = s["html_url"]
+        batch.append(s)
+    
+    if batch:
+        save_skills_batch(batch)
+        save_snapshots_batch(batch)
+        count += len(batch)
 
     logger.info(f"Collection complete. Total skills processed: {count}")
     return load_cache()[:500]

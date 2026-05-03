@@ -13,17 +13,19 @@ A professional full-stack research dashboard designed to crawl, analyze, and vis
 ### 📊 Advanced Market Analytics (Blue Book Standard)
 - **Gini Coefficient Optimization**: Precise measurement of "star wealth" inequality in the ecosystem.
 - **Long-Tail Distribution**: Interactive visualization of the "silent majority" (0-star skills).
-- **Large-Scale Dataset**: Powered by a multi-source crawler capable of handling 20,000+ records.
+- **Data Provenance & Reliability**: Every record tracks its `source`, `source_url`, and `metadata_quality`. Inferred fields are clearly flagged.
+- **Historical Snapshots**: Daily time-series tracking of skill metrics (stars) for advanced trend analysis.
 
 ### 🕸️ Multi-Source Intelligent Discovery
 - **Deep Traversal**: Automatically paginates through entire keyword/tag sets from SkillsMP.
 - **GitHub Integration**: Direct discovery of `mcp-server` topics and `SKILL.md` feature files.
-- **Persistent Cooldown**: Intelligent 12-hour collection cooldown stored in SQLite to avoid API rate limits.
+- **Dynamic Trending**: Advanced leaderboards for *Growth* (velocity), *New Comers* (recent discovery), and *Revivals* (resurgent skills).
+- **Persistent Cooldown**: Intelligent 12-hour collection cooldown stored in SQLite.
 
 ### 🏗️ Technical Architecture
-- **Storage**: High-performance SQLite with **WAL mode** for concurrent background updates.
-- **Background Processing**: Non-blocking data collection using FastAPI BackgroundTasks for a responsive UI.
-- **Warmup System**: Dedicated CLI tool for initial deep-seeding of the local research database.
+- **Performance Storage**: High-performance SQLite with **WAL mode**, batch write transactions, and optimized indexing.
+- **Environment Driven**: Fully configurable via environment variables for easy deployment (`ALLOW_ORIGINS`, `VITE_API_BASE_URL`).
+- **Background Processing**: Non-blocking data collection using FastAPI BackgroundTasks.
 
 ### ✍️ Automated Research Reporting
 - **AI Synthesis**: Generates professional-grade research articles using Gemini 1.5 Flash.

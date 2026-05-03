@@ -8,12 +8,12 @@ import { ActivityHealth } from './components/ActivityHealth'
 import { PredictionForecast } from './components/PredictionForecast'
 import { ResearchReport } from './components/ResearchReport'
 import { fetchMarketStats, fetchRankings, fetchTrending } from './api/client'
-import type { MarketStats, Skill } from './api/client'
+import type { MarketStats, Skill, TrendingResults } from './api/client'
 
 function App() {
   const [stats, setStats] = useState<MarketStats | null>(null)
   const [rankings, setRankings] = useState<Skill[]>([])
-  const [trending, setTrending] = useState<Skill[]>([])
+  const [trending, setTrending] = useState<TrendingResults>({ growth: [], new_comers: [], revivals: [] })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'market' | 'trends' | 'rankings' | 'research'>('market')
@@ -199,7 +199,7 @@ function App() {
                 </div>
               </div>
               <div className="glass p-2 rounded-[2rem] shadow-soft">
-                <TrendingGrid skills={trending} />
+                <TrendingGrid trending={trending} />
               </div>
             </div>
           </div>
