@@ -1,68 +1,114 @@
-# Skill Research Hub (formerly SkillSMP Analytics)
+# 🔍 Skill Research Hub
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/Frontend-React%2019-61DAFB.svg?style=flat&logo=react&logoColor=black)](https://react.dev)
 
 A professional full-stack research dashboard designed to crawl, analyze, and visualize the AI Agent Skill ecosystem. Inspired by the **Agent Skills Blue Book 2026**, this tool provides deep insights into market distribution, predictive trends, and automated AI reporting.
 
-## 🚀 Key Features (Blue Book Edition)
+---
 
-- **Advanced Market Analytics**: 
-  - **Optimized Gini Coefficient**: Precise measurement of star distribution inequality.
-  - **Long-Tail Distribution**: Visualize the "silent majority" with Star Buckets (0, 1-9, 10-49, etc.).
-  - **Creator Concentration**: Analyze star share of top 10 authors and the "single-skill creator" ratio.
-- **Predictive Trends (Future Forecast)**:
-  - **Explosion Prediction**: AI-driven scoring based on momentum, activity, and base quality.
-  - **Death Risk Assessment**: Identify endangered skills based on stagnation and low engagement.
-- **Automated Research Reporting**:
-  - **AI Writing Engine**: Generates professional research articles using Gemini 1.5 Flash.
-  - **Markdown & Prose**: Beautifully formatted reports with copy-to-clipboard support.
-- **Ecosystem Health Monitoring**:
-  - **Activity Status**: Categorize skills as Active, Stale, Decaying, or Dead based on update frequency.
+## 🚀 Key Features
 
-## 🏗️ Architecture
+### 📊 Advanced Market Analytics (Blue Book Standard)
+- **Gini Coefficient Optimization**: Precise measurement of "star wealth" inequality in the ecosystem.
+- **Long-Tail Distribution**: Interactive visualization of the "silent majority" (0-star skills).
+- **Creator Concentration**: Metrics on star share by top authors and single-skill creator ratios.
 
-### Backend (FastAPI)
-- **Research Services**: Specialized logic in `analytics.py` for statistical distributions and predictive modeling.
-- **AI Reporter**: `reporter.py` leverages Google Generative AI for automated content creation.
-- **Collector & Metadata**: Ensures all indexed skills have research-ready metadata (author, last update).
+### 🔮 Future Forecast (Predictive AI)
+- **Explosion Score**: Identifies high-momentum skills with viral potential using a weighted momentum/quality model.
+- **Death Risk Assessment**: Early warning system for skills showing signs of stagnation or abandonment.
 
-### Frontend (React + TypeScript)
-- **Visual Analytics**: Interactive Bar and Pie charts powered by Recharts.
-- **Rich Content**: Markdown rendering with Tailwind Typography for professional report presentation.
+### ✍️ Automated Research Reporting
+- **AI Synthesis**: Generates professional-grade research articles using Gemini 1.5 Flash.
+- **Markdown & Prose**: Beautifully formatted reports using Tailwind Typography for a journal-like reading experience.
+
+### 🩺 Ecosystem Health
+- **Activity Lifecycles**: Categorizes skills as *Active, Stale, Decaying,* or *Dead* based on update recency.
+
+---
+
+## 🏗️ Project Structure
+
+```text
+.
+├── backend/                # FastAPI Application
+│   ├── app/
+│   │   ├── api/           # API Endpoints (Market, Predictions, Reports)
+│   │   ├── services/      # Core Logic (Analytics, AI Reporter, Collector)
+│   │   └── cache.py       # Data Persistence Layer
+│   └── requirements.txt    # Python Dependencies
+├── frontend/               # React TypeScript Application (Vite)
+│   ├── src/
+│   │   ├── components/    # Recharts & UI Components
+│   │   ├── api/           # Typed API Client
+│   │   └── App.tsx        # Main Dashboard Layout
+│   └── package.json        # Node Dependencies
+└── README.md
+```
+
+---
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Python 3.8+, FastAPI, Uvicorn, google-generativeai, Requests.
-- **Frontend**: React 19, TypeScript, Vite, Recharts, react-markdown, Tailwind CSS.
+- **Backend**: Python 3.8+, FastAPI, Uvicorn, google-generativeai.
+- **Frontend**: React 19, TypeScript, Vite, Recharts, Tailwind CSS.
+- **Data**: Deterministic metadata simulation for consistent research datasets.
+
+---
 
 ## 🏃 Getting Started
 
 ### Prerequisites
 - Python 3.8+
 - Node.js 18+ & npm
-- Google Gemini API Key (Optional, for AI reporting)
+- [Google Gemini API Key](https://aistudio.google.com/) (Optional, for AI reporting)
 
-### Backend Setup
-1. Enter directory: `cd backend`
-2. Install dependencies: `pip install -r requirements.txt`
-3. Configure `.env`:
-   ```env
-   GOOGLE_API_KEY=your_gemini_key
-   SKILLSMP_API_KEY=your_api_key
+### Setup & Run
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/alingowangxr/skill-research-hub.git
+   cd skill-research-hub
    ```
-4. Run server: `python -m uvicorn app.main:app --reload`
 
-### Frontend Setup
-1. Enter directory: `cd frontend`
-2. Install dependencies: `npm install`
-3. Start dev server: `npm run dev`
-4. Access dashboard: `http://localhost:5173`
+2. **Backend Setup**
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   # Create .env and add:
+   # GOOGLE_API_KEY=your_key
+   python -m uvicorn app.main:app --reload
+   ```
 
-## 📊 Core Research Metrics
+3. **Frontend Setup**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
 
-- **Gini Coefficient**: Measures "wealth" (star) inequality. 1.0 = total monopoly; 0.0 = perfect equality.
-- **Explosion Score**: Predicts high-momentum skills likely to go viral.
-- **Death Risk**: Forecasts skills at risk of being abandoned or replaced.
-- **Activity Status**: Measures the vitality of the ecosystem by tracking commit recency.
+4. **Visit Dashboard**: `http://localhost:5173`
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Whether it's adding new data sources, refining the prediction model, or improving the UI.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
 
 ## 📝 License
 
-MIT
+Distributed under the MIT License. See `README.md` for more information.
+
+## 🙏 Acknowledgments
+
+- Inspired by the [Agent Skills Blue Book 2026](https://github.com/zhuyansen/skill-blue-book).
+- Built with ❤️ for the AI Agent community.
