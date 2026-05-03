@@ -1,19 +1,15 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 from ..cache import load_cache
 from ..services.collector import collect_dataset
 
 router = APIRouter()
 
 @router.get("/")
-def trending():
-    old = load_cache()
-    new = collect_dataset()
+def trending(background_tasks: BackgroundTasks):
+    data = load_cache()
+    background_tasks.add_task(collect_dataset)
 
-    trends = []
-    for s in new:
-        prev = old.get(s["id"], {})
-        delta = s.get("stars", 0) - prev.get("stars", 0)
-        trends.append((delta, s))
-
-    trends.sort(key=lambda x: x[0], reverse=True)
-    return [s for _, s in trends[:20]]
+    # For trending, we show top starred in the current cache 
+    # as a fallback when background task is still running
+    sorted_data = sorted(data, key=lambda x: x.get("stars", 0), reverse=True)
+    return sorted_data[:20]
