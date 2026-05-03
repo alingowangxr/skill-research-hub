@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { LayoutDashboard, Users, BarChart3, AlertCircle, RefreshCw, TrendingUp, Activity, ShieldCheck } from 'lucide-react'
+import { LayoutDashboard, Users, BarChart3, AlertCircle, RefreshCw, TrendingUp, Activity, ShieldCheck, Zap } from 'lucide-react'
 import { StatCard } from './components/StatCard'
 import { RankingsTable } from './components/RankingsTable'
 import { TrendingGrid } from './components/TrendingGrid'
@@ -42,31 +42,40 @@ function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900">
+      {/* Background Decor */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-blue-100/50 blur-[120px] rounded-full" />
+        <div className="absolute top-[20%] -right-[10%] w-[30%] h-[30%] bg-purple-100/40 blur-[100px] rounded-full" />
+      </div>
+
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-600 p-1.5 rounded-lg">
-              <BarChart3 className="w-5 h-5 text-white" />
+      <header className="glass sticky top-0 z-50 border-b border-slate-200/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-2.5 rounded-xl shadow-lg shadow-blue-200">
+              <BarChart3 className="w-6 h-6 text-white" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-xl font-bold tracking-tight leading-none">Skill Research Hub</h1>
-              <span className="text-[10px] text-blue-600 font-bold uppercase tracking-widest mt-1">Powered by Blue Book Analytics</span>
+              <h1 className="text-2xl font-black tracking-tight text-slate-900 leading-none">Skill Research Hub</h1>
+              <div className="flex items-center gap-1.5 mt-1.5">
+                <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Live Ecosystem Intelligence</span>
+              </div>
             </div>
           </div>
           <button 
             onClick={loadData}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+            className="group relative flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold transition-all shadow-xl shadow-slate-200 disabled:opacity-50 overflow-hidden"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            Refresh
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
+            <span>Sync Intelligence</span>
           </button>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col gap-10">
         {error && (
           <div className="bg-red-50 border border-red-200 p-4 rounded-xl flex items-start gap-3 text-red-700">
             <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -149,28 +158,49 @@ function App() {
         )}
 
         {/* Trending Section */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <Activity className="w-5 h-5 text-blue-500" />
-            <h2 className="text-lg font-bold">Trending Growth (Delta)</h2>
+        <div className="flex flex-col gap-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-50 rounded-lg">
+              <Activity className="w-5 h-5 text-blue-600" />
+            </div>
+            <div className="flex flex-col">
+              <h2 className="text-xl font-black text-slate-900 tracking-tight">Trending Growth</h2>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Momentum Intelligence (Delta)</p>
+            </div>
           </div>
-          <TrendingGrid skills={trending} />
+          <div className="glass p-2 rounded-[2rem] shadow-soft">
+            <TrendingGrid skills={trending} />
+          </div>
         </div>
 
         {/* Rankings Section */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-blue-500" />
-            <h2 className="text-lg font-bold">Skill Rankings (Quality Score)</h2>
+        <div className="flex flex-col gap-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-indigo-50 rounded-lg">
+              <TrendingUp className="w-5 h-5 text-indigo-600" />
+            </div>
+            <div className="flex flex-col">
+              <h2 className="text-xl font-black text-slate-900 tracking-tight">Skill Rankings</h2>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Quality Scoring Matrix</p>
+            </div>
           </div>
-          <RankingsTable skills={rankings} />
+          <div className="glass p-2 rounded-[2rem] shadow-soft overflow-hidden">
+            <RankingsTable skills={rankings} />
+          </div>
         </div>
       </main>
 
-      <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-200">
-        <p className="text-center text-gray-400 text-xs">
-          Skill Research Hub &copy; 2026. Inspired by Agent Skills Blue Book.
-        </p>
+      <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-slate-200/50 mt-10">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="flex items-center gap-2 opacity-50 grayscale hover:grayscale-0 transition-all cursor-default">
+            <BarChart3 className="w-4 h-4" />
+            <span className="text-xs font-black uppercase tracking-[0.3em]">Skill Research Hub</span>
+          </div>
+          <p className="text-slate-400 text-[11px] font-medium leading-loose max-w-sm">
+            A premium intelligence platform for AI Agent ecosystems. <br />
+            Inspired by Agent Skills Blue Book &copy; 2026.
+          </p>
+        </div>
       </footer>
     </div>
   )

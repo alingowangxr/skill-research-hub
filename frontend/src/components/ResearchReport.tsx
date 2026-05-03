@@ -29,48 +29,62 @@ export const ResearchReport: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="p-6 border-b border-gray-50 flex items-center justify-between bg-gradient-to-r from-blue-50 to-white">
-        <div className="flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-blue-600" />
-          <h2 className="text-lg font-bold text-gray-900">AI Research Insights</h2>
+    <div className="glass rounded-3xl shadow-soft overflow-hidden">
+      <div className="p-8 border-b border-slate-100/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gradient-to-br from-blue-50/50 via-white to-indigo-50/30">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-white rounded-xl shadow-sm border border-blue-100">
+            <BookOpen className="w-6 h-6 text-blue-600" />
+          </div>
+          <div className="flex flex-col">
+            <h2 className="text-xl font-black text-slate-900 tracking-tight">AI Research Synthesis</h2>
+            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-0.5">Automated Intelligence Report</p>
+          </div>
         </div>
         <button
           onClick={handleGenerate}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-all shadow-md shadow-blue-100 disabled:opacity-50"
+          className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-200 disabled:opacity-50"
         >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4 group-hover:rotate-12 transition-transform" />}
           {report ? 'Regenerate Analysis' : 'Generate Full Report'}
         </button>
       </div>
 
-      <div className="p-6">
+      <div className="p-8">
         {!report && !loading ? (
-          <div className="py-12 flex flex-col items-center justify-center text-center gap-4">
-            <div className="bg-blue-50 p-4 rounded-full">
-              <BookOpen className="w-8 h-8 text-blue-400" />
+          <div className="py-20 flex flex-col items-center justify-center text-center gap-6">
+            <div className="relative">
+              <div className="absolute inset-0 bg-blue-400 blur-2xl opacity-20 animate-pulse-soft" />
+              <div className="relative bg-white p-6 rounded-3xl shadow-xl border border-blue-50">
+                <BookOpen className="w-12 h-12 text-blue-500" />
+              </div>
             </div>
-            <div className="max-w-xs">
-              <p className="text-gray-600 font-medium">Ready to analyze the market?</p>
-              <p className="text-gray-400 text-sm mt-1">Click the button above to generate a professional AI-powered research report.</p>
+            <div className="max-w-md flex flex-col gap-2">
+              <p className="text-xl font-black text-slate-900">Synthesize Market Intelligence</p>
+              <p className="text-slate-400 text-sm font-medium leading-relaxed">
+                Connect to our neural engine to generate a multi-dimensional research report based on current market metrics, predictive scores, and author concentration.
+              </p>
             </div>
           </div>
         ) : loading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-4 text-blue-600">
-            <Loader2 className="w-10 h-10 animate-spin" />
-            <p className="font-medium animate-pulse">AI is synthesizing data and writing report...</p>
+          <div className="py-28 flex flex-col items-center justify-center gap-6">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.3s]" />
+              <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
+              <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce" />
+            </div>
+            <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">AI is synthesizing ecosystem data...</p>
           </div>
         ) : (
-          <div className="relative group">
+          <div className="relative">
             <button
               onClick={handleCopy}
-              className="absolute right-0 top-0 p-2 text-gray-400 hover:text-blue-600 bg-gray-50 rounded-md transition-colors"
+              className="absolute -right-2 -top-2 p-3 text-slate-400 hover:text-blue-600 bg-white/50 backdrop-blur rounded-xl border border-slate-100 transition-all shadow-sm hover:shadow-md"
               title="Copy to clipboard"
             >
               {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
             </button>
-            <article className="prose prose-blue prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-600 prose-strong:text-blue-700 prose-li:text-gray-600">
+            <article className="prose prose-slate prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tight prose-p:leading-relaxed prose-p:text-slate-600 prose-strong:text-blue-700 prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50/50 prose-blockquote:py-2 prose-blockquote:rounded-r-xl">
               <ReactMarkdown>{report!}</ReactMarkdown>
             </article>
           </div>
