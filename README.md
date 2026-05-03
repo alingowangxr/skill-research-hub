@@ -28,7 +28,7 @@ A professional full-stack research dashboard designed to crawl, analyze, and vis
 ### ✍️ Automated Research Reporting
 - **AI Synthesis**: Generates professional-grade research articles using Gemini 1.5 Flash.
 - **Markdown & Prose**: Beautifully formatted reports using Tailwind Typography for a journal-like reading experience.
-- **Example Output**: [View a Sample Research Report](./docs/reports/sample_report_zh.md)
+- **Sample Reports**: [English Version](./docs/reports/sample_report_en.md) | [Chinese Version](./docs/reports/sample_report_zh.md)
 
 ### 🩺 Ecosystem Health
 - **Activity Lifecycles**: Categorizes skills as *Active, Stale, Decaying,* or *Dead* based on update recency.

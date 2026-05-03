@@ -16,6 +16,7 @@ function App() {
   const [trending, setTrending] = useState<Skill[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'market' | 'trends' | 'rankings' | 'research'>('market')
 
   const loadData = async () => {
     setLoading(true)
@@ -60,7 +61,7 @@ function App() {
               <h1 className="text-2xl font-black tracking-tight text-slate-900 leading-none">Skill Research Hub</h1>
               <div className="flex items-center gap-1.5 mt-1.5">
                 <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Live Ecosystem Intelligence</span>
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Live Intelligence: {stats?.total.toLocaleString() || 0} Skills</span>
               </div>
             </div>
           </div>
@@ -75,7 +76,32 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col gap-10">
+      {/* Tab Navigation */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="flex p-1 gap-1 bg-slate-200/50 rounded-2xl w-fit">
+          {[
+            { id: 'market', label: 'Market Overview', icon: LayoutDashboard },
+            { id: 'trends', label: 'Discovery & Trends', icon: Zap },
+            { id: 'rankings', label: 'Skill Rankings', icon: TrendingUp },
+            { id: 'research', label: 'AI Reports', icon: ShieldCheck }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                activeTab === tab.id 
+                ? 'bg-white text-blue-600 shadow-sm' 
+                : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+              }`}
+            >
+              <tab.icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-8">
         {error && (
           <div className="bg-red-50 border border-red-200 p-4 rounded-xl flex items-start gap-3 text-red-700">
             <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -83,111 +109,128 @@ function App() {
           </div>
         )}
 
-        {/* Core Market Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard 
-            title="Total Skills" 
-            value={stats?.total || 0} 
-            icon={Users} 
-            description="Total indexed unique skills"
-          />
-          <StatCard 
-            title="Gini Coefficient" 
-            value={stats?.gini || '0.000'} 
-            icon={LayoutDashboard} 
-            description="Wealth inequality (Stars)"
-          />
-          <StatCard 
-            title="Zero Star %" 
-            value={`${stats?.zero_star_pct || 0}%`} 
-            icon={AlertCircle} 
-            description="Skills with no star recognition"
-          />
-          <StatCard 
-            title="Top 1% Share" 
-            value={`${stats?.top_1_pct || 0}%`} 
-            icon={TrendingUp} 
-            description="Star share of top 1% skills"
-          />
-        </div>
+        {/* Tab Content */}
+        {activeTab === 'market' && (
+          <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Core Market Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <StatCard 
+                title="Total Skills" 
+                value={stats?.total || 0} 
+                icon={Users} 
+                description="Total indexed unique skills"
+              />
+              <StatCard 
+                title="Gini Coefficient" 
+                value={stats?.gini || '0.000'} 
+                icon={LayoutDashboard} 
+                description="Wealth inequality (Stars)"
+              />
+              <StatCard 
+                title="Zero Star %" 
+                value={`${stats?.zero_star_pct || 0}%`} 
+                icon={AlertCircle} 
+                description="Skills with no star recognition"
+              />
+              <StatCard 
+                title="Top 1% Share" 
+                value={`${stats?.top_1_pct || 0}%`} 
+                icon={TrendingUp} 
+                description="Star share of top 1% skills"
+              />
+            </div>
 
-        {/* AI Research Report Section */}
-        <ResearchReport />
+            {/* Research Charts */}
+            {stats && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <DistributionChart data={stats.star_buckets} />
+                <ActivityHealth data={stats.activity_health} />
+              </div>
+            )}
 
-        {/* Research Charts */}
-        {stats && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <DistributionChart data={stats.star_buckets} />
-            <ActivityHealth data={stats.activity_health} />
+            {/* Creator Insights */}
+            {stats && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <StatCard 
+                  title="Top 10 Creator Share" 
+                  value={`${stats.author_concentration.top_10_share}%`} 
+                  icon={TrendingUp} 
+                  description="Star share of top 10 authors"
+                />
+                <StatCard 
+                  title="Single-Skill Authors" 
+                  value={`${stats.author_concentration.single_author_pct}%`} 
+                  icon={Users} 
+                  description="Authors with only one skill"
+                />
+                <StatCard 
+                  title="Total Authors" 
+                  value={stats.author_concentration.total_authors} 
+                  icon={ShieldCheck} 
+                  description="Unique skill creators indexed"
+                />
+              </div>
+            )}
           </div>
         )}
 
-        {/* Future Forecast */}
-        {stats && (
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2">
-              <Zap className="w-5 h-5 text-purple-500 fill-current" />
-              <h2 className="text-lg font-bold">Future Forecast (AI Predictions)</h2>
+        {activeTab === 'trends' && (
+          <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Future Forecast */}
+            {stats && (
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-purple-500 fill-current" />
+                  <h2 className="text-lg font-bold">Future Forecast (AI Predictions)</h2>
+                </div>
+                <PredictionForecast predictions={stats.predictions} />
+              </div>
+            )}
+
+            {/* Trending Section */}
+            <div className="flex flex-col gap-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-50 rounded-lg">
+                  <Activity className="w-5 h-5 text-blue-600" />
+                </div>
+                <div className="flex flex-col">
+                  <h2 className="text-xl font-black text-slate-900 tracking-tight">Trending Growth</h2>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Momentum Intelligence (Delta)</p>
+                </div>
+              </div>
+              <div className="glass p-2 rounded-[2rem] shadow-soft">
+                <TrendingGrid skills={trending} />
+              </div>
             </div>
-            <PredictionForecast predictions={stats.predictions} />
           </div>
         )}
 
-        {/* Creator Insights */}
-        {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <StatCard 
-              title="Top 10 Creator Share" 
-              value={`${stats.author_concentration.top_10_share}%`} 
-              icon={TrendingUp} 
-              description="Star share of top 10 authors"
-            />
-            <StatCard 
-              title="Single-Skill Authors" 
-              value={`${stats.author_concentration.single_author_pct}%`} 
-              icon={Users} 
-              description="Authors with only one skill"
-            />
-            <StatCard 
-              title="Total Authors" 
-              value={stats.author_concentration.total_authors} 
-              icon={ShieldCheck} 
-              description="Unique skill creators indexed"
-            />
+        {activeTab === 'rankings' && (
+          <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Rankings Section */}
+            <div className="flex flex-col gap-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-indigo-50 rounded-lg">
+                  <TrendingUp className="w-5 h-5 text-indigo-600" />
+                </div>
+                <div className="flex flex-col">
+                  <h2 className="text-xl font-black text-slate-900 tracking-tight">Skill Rankings</h2>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Quality Scoring Matrix (Top 50)</p>
+                </div>
+              </div>
+              <div className="glass p-2 rounded-[2rem] shadow-soft overflow-hidden">
+                <RankingsTable skills={rankings} />
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Trending Section */}
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-50 rounded-lg">
-              <Activity className="w-5 h-5 text-blue-600" />
-            </div>
-            <div className="flex flex-col">
-              <h2 className="text-xl font-black text-slate-900 tracking-tight">Trending Growth</h2>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Momentum Intelligence (Delta)</p>
-            </div>
+        {activeTab === 'research' && (
+          <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* AI Research Report Section */}
+            <ResearchReport />
           </div>
-          <div className="glass p-2 rounded-[2rem] shadow-soft">
-            <TrendingGrid skills={trending} />
-          </div>
-        </div>
-
-        {/* Rankings Section */}
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-indigo-50 rounded-lg">
-              <TrendingUp className="w-5 h-5 text-indigo-600" />
-            </div>
-            <div className="flex flex-col">
-              <h2 className="text-xl font-black text-slate-900 tracking-tight">Skill Rankings</h2>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Quality Scoring Matrix</p>
-            </div>
-          </div>
-          <div className="glass p-2 rounded-[2rem] shadow-soft overflow-hidden">
-            <RankingsTable skills={rankings} />
-          </div>
-        </div>
+        )}
       </main>
 
       <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-slate-200/50 mt-10">
