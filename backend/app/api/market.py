@@ -3,6 +3,7 @@ from ..cache import load_cache, get_all_deltas
 from ..services.collector import collect_dataset
 from ..services.analytics import compute_stats
 from ..services.reporter import get_ai_report
+from ..services.xquik_social import fetch_xquik_social_signals
 
 router = APIRouter()
 
@@ -24,3 +25,7 @@ def report():
     data = load_cache()
     stats = compute_stats(data, {})
     return {"report": get_ai_report(stats)}
+
+@router.get("/social-signals")
+def social_signals():
+    return fetch_xquik_social_signals()

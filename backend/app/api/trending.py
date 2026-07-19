@@ -5,6 +5,13 @@ from datetime import datetime, timedelta, timezone
 
 router = APIRouter()
 
+
+def _revival_velocity(skill):
+    delta = skill.get("delta", 0)
+    stars = max(skill.get("stars") or 0, 0)
+    return delta / (stars + 1)
+
+
 @router.get("/")
 def trending(background_tasks: BackgroundTasks):
     data = load_cache()
@@ -52,7 +59,7 @@ def trending(background_tasks: BackgroundTasks):
             s["delta"] = d
             revivals.append(s)
         
-    revivals.sort(key=lambda x: (x.get("delta", 0) / (stars + 1)), reverse=True)
+    revivals.sort(key=_revival_velocity, reverse=True)
 
     return {
         "growth": growth[:20],

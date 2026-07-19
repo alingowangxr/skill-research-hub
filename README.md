@@ -121,3 +121,5 @@ Distributed under the MIT License. See `README.md` for more information.
 
 - Inspired by the [Agent Skills Blue Book 2026](https://github.com/zhuyansen/skill-blue-book).
 - Built with ❤️ for the AI Agent community.
+
+Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
